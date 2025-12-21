@@ -10,8 +10,7 @@ struct ListNode {
     ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
-class Solution {
-public:
+
     ListNode* reverseList(ListNode* head) {
         // TC - 0(n)
         // SC - 0(1)
@@ -32,7 +31,6 @@ public:
 
         return prev;
     }
-};
 
 ListNode* mergeTwoLists(ListNode* list1, ListNode* list2){
     // TC - O(l1+l2)
@@ -93,6 +91,42 @@ bool hasCycle(ListNode *head) {
         return false;
     }
 
+    ListNode* findMid(ListNode* head){
+        // TC - O(n)
+        // SC - O(1)
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while(fast!=NULL && fast->next!=NULL){
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    }
+
+    void reorderList(ListNode* head) {
+    if (!head || !head->next) return;
+
+    ListNode* mid = findMid(head);
+    ListNode* second = mid->next;
+    mid->next = NULL;
+
+    ListNode* rev = reverseList(second);
+    ListNode* first = head;
+
+    while (first && rev) {
+        ListNode* t1 = first->next;
+        ListNode* t2 = rev->next;
+
+        first->next = rev;
+        rev->next = t1;
+
+        first = t1;
+        rev = t2;
+
+        }
+    }
+
 ListNode* createList(const int arr[], int n) {
     if (n == 0) return nullptr;
     ListNode* head = new ListNode(arr[0]);
@@ -123,7 +157,6 @@ void deleteList(ListNode* head) {
 }
 
 int main() {
-    Solution solution;
     // int arr[] = {1, 2, 3, 4};
     // int n = sizeof(arr) / sizeof(arr[0]);
 
@@ -148,13 +181,21 @@ int main() {
 
     // printList(mergeTwoLists(list1, list2));
 
-    int c[] = {1, 2, 3, 4};
-    ListNode* cycleList = createList(c, 4);
+    // int c[] = {1, 2, 3, 4};
+    // ListNode* cycleList = createList(c, 4);
 
     // create cycle: tail -> node with value 2
     // cycleList->next->next->next->next = cycleList->next;
 
-    cout << "Has Cycle: " << (hasCycle(cycleList) ? "true" : "false") << endl;
+    // cout << "Has Cycle: " << (hasCycle(cycleList) ? "true" : "false") << endl;
+
+    int arr[] = {1, 2, 3, 4, 5};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    ListNode* originalHead = createList(arr, n);
+
+    reorderList(originalHead);
+    printList(originalHead);
 
     return 0;
 }
